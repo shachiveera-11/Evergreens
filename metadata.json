@@ -1,0 +1,7 @@
+{
+  "name": "EVERGREENS Influencer Platform",
+  "description": "A two-sided AI-powered platform for EVERGREENS (Mumbai) to manage influencer collaborations, featuring an AI brand representative and campaign tracking.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
