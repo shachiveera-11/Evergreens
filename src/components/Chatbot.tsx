@@ -11,7 +11,7 @@ interface Message {
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: "Namaste! I'm the EVERGREENS Brand Assistant. How can I help you today? You can learn more about us, discuss a potential collaboration, or schedule a meeting." }
+    { role: 'model', text: "Hi! Welcome to EVERGREENS 😊 How can I help you today?" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
