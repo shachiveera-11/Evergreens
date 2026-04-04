@@ -38,7 +38,7 @@ export default function Chatbot() {
     }));
 
     const response = await getChatResponse(messageText, history);
-    setMessages([...newMessages, { role: 'model', text: response || '' }]);
+    setMessages([...newMessages, { role: 'model', text: response || "I'm sorry, I couldn't get a response. Please try again." }]);
     setIsLoading(false);
   };
 
@@ -70,9 +70,18 @@ export default function Chatbot() {
                 <Bot size={20} />
                 <span className="font-medium">EVERGREENS Assistant</span>
               </div>
-              <button onClick={() => setIsOpen(false)} className="hover:opacity-70">
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setMessages([{ role: 'model', text: "Hi! Welcome to EVERGREENS 😊 How can I help you today?" }])}
+                  className="hover:opacity-70 text-[10px] uppercase font-bold"
+                  title="Clear Chat"
+                >
+                  Clear
+                </button>
+                <button onClick={() => setIsOpen(false)} className="hover:opacity-70">
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">

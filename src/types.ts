@@ -10,15 +10,20 @@ export interface User {
 export interface Proposal {
   id: number;
   influencer_id: number;
-  influencer_name?: string;
-  title: string;
+  influencer_name: string;
+  influencer_email: string;
+  platform_handle: string;
+  followers_count: number;
   description: string;
   reels_count: number;
-  demographics: string;
-  expected_reach: string;
-  budget: string;
+  expected_reach: number;
+  budget: number;
   status: 'pending' | 'approved' | 'rejected';
   progress: 'not_started' | 'in_progress' | 'completed';
+  reel_link?: string;
+  content_url?: string;
+  actual_reach?: number;
+  performance_insights?: string;
   created_at: string;
 }
 

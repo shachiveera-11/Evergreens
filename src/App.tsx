@@ -50,22 +50,6 @@ export default function App() {
           <Chatbot />
         </>
       )}
-      
-      {/* Footer */}
-      <footer className="bg-forest text-sage py-8 px-6 text-center text-xs border-t border-sage/10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex flex-col items-center md:items-start">
-            <p className="font-display font-bold text-white text-lg mb-1">EVERGREENS</p>
-            <p>Mumbai, India • Crafted for the Modern World</p>
-          </div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">Instagram</a>
-            <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
-            <a href="#" className="hover:text-white transition-colors">Contact Us</a>
-          </div>
-          <p>© 2026 EVERGREENS. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

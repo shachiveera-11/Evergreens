@@ -11,6 +11,7 @@ export default function Login({ onLogin }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [role, setRole] = useState<'influencer' | 'admin'>('influencer');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -18,7 +19,7 @@ export default function Login({ onLogin }: LoginProps) {
     setError('');
     
     const endpoint = isRegistering ? '/api/auth/register' : '/api/auth/login';
-    const body = isRegistering ? { email, password, name } : { email, password };
+    const body = isRegistering ? { email, password, name, role } : { email, password };
 
     try {
       const res = await fetch(endpoint, {
@@ -26,20 +27,28 @@ export default function Login({ onLogin }: LoginProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      const data = await res.json();
-
-      if (data.success) {
-        if (isRegistering) {
-          setIsRegistering(false);
-          setError('Registration successful! Please login.');
+      
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await res.json();
+        if (data.success) {
+          if (isRegistering) {
+            setIsRegistering(false);
+            setError('Registration successful! Please login.');
+          } else {
+            onLogin(data.user);
+          }
         } else {
-          onLogin(data.user);
+          setError(data.message || 'Authentication failed');
         }
       } else {
-        setError(data.message || 'Something went wrong');
+        const text = await res.text();
+        console.error("Non-JSON response:", text);
+        setError(`Server error (${res.status}): ${text.slice(0, 50)}${text.length > 50 ? '...' : ''}`);
       }
     } catch (err) {
-      setError('Failed to connect to server');
+      console.error("Fetch error details:", err);
+      setError(`Failed to connect to server: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
@@ -51,53 +60,79 @@ export default function Login({ onLogin }: LoginProps) {
         className="w-full max-w-md glass-card p-8"
       >
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-display font-bold text-forest mb-2">EVERGREENS</h1>
+          <h1 className="text-4xl font-display font-bold text-forest mb-2">EVERGREENS V3</h1>
           <p className="text-sage">Influencer Collaboration Platform</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {isRegistering && (
-            <div className="relative">
-              <User className="absolute left-4 top-3.5 text-sage" size={18} />
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="input-field pl-12"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
+            <>
+              <div className="relative flex items-center group">
+                <User className="absolute left-5 text-sage group-focus-within:text-forest transition-colors z-10" size={18} />
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  className="input-field pr-4 relative"
+                  style={{ paddingLeft: '4rem' }}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex gap-2 p-1 bg-beige rounded-2xl">
+                <button
+                  type="button"
+                  onClick={() => setRole('influencer')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${role === 'influencer' ? 'bg-forest text-white shadow-lg' : 'text-sage hover:text-forest'}`}
+                >
+                  Influencer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole('admin')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${role === 'admin' ? 'bg-forest text-white shadow-lg' : 'text-sage hover:text-forest'}`}
+                >
+                  Admin
+                </button>
+              </div>
+            </>
           )}
-          <div className="relative">
-            <Mail className="absolute left-4 top-3.5 text-sage" size={18} />
+          <div className="relative flex items-center group">
+            <Mail className="absolute left-5 text-sage group-focus-within:text-forest transition-colors z-10" size={18} />
             <input
               type="email"
               placeholder="Email Address"
-              className="input-field pl-12"
+              className="input-field pr-4 relative"
+              style={{ paddingLeft: '4rem' }}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-          <div className="relative">
-            <Lock className="absolute left-4 top-3.5 text-sage" size={18} />
+          <div className="relative flex items-center group">
+            <Lock className="absolute left-5 text-sage group-focus-within:text-forest transition-colors z-10" size={18} />
             <input
               type="password"
               placeholder="Password"
-              className="input-field pl-12"
+              className="input-field pr-4 relative"
+              style={{ paddingLeft: '4rem' }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-          <button type="submit" className="btn-primary w-full flex items-center justify-center gap-2">
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit" 
+            className="btn-primary w-full flex items-center justify-center gap-2"
+          >
             {isRegistering ? 'Create Account' : 'Sign In'}
             <ArrowRight size={18} />
-          </button>
+          </motion.button>
         </form>
 
         <div className="mt-6 text-center">
